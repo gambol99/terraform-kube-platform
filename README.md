@@ -1,6 +1,3 @@
-<!-- markdownlint-disable -->
-<a href="https://www.appvia.io/"><img src="https://github.com/appvia/terraform-aws-module-template/blob/main/docs/banner.jpg?raw=true" alt="Appvia Banner"/></a><br/><p align="right"> <a href="https://registry.terraform.io/modules/appvia/module-template/aws/latest"><img src="https://img.shields.io/static/v1?label=APPVIA&message=Terraform%20Registry&color=191970&style=for-the-badge" alt="Terraform Registry"/></a></a> <a href="https://github.com/appvia/terraform-aws-module-template/releases/latest"><img src="https://img.shields.io/github/release/appvia/terraform-aws-module-template.svg?style=for-the-badge&color=006400" alt="Latest Release"/></a> <a href="https://appvia-community.slack.com/join/shared_invite/zt-1s7i7xy85-T155drryqU56emm09ojMVA#/shared-invite/email"><img src="https://img.shields.io/badge/Slack-Join%20Community-purple?style=for-the-badge&logo=slack" alt="Slack Community"/></a> <a href="https://github.com/appvia/terraform-aws-module-template/graphs/contributors"><img src="https://img.shields.io/github/contributors/appvia/terraform-aws-module-template.svg?style=for-the-badge&color=FF8C00" alt="Contributors"/></a>
-
 <!-- markdownlint-restore -->
 <!--
   ***** CAUTION: DO NOT EDIT ABOVE THIS LINE ******
@@ -8,22 +5,46 @@
 
 ![Github Actions](https://github.com/appvia/terraform-aws-module-template/actions/workflows/terraform.yml/badge.svg)
 
-# Terraform <NAME>
+# Terraform Kubernetes Onboarding Module
 
 ## Description
 
-Add a description of the module here
+This module is used to onboard a new Kubernetes cluster as a hub or spoke cluster, using the platform pattern outline in the [Kubernetes Platform](https://github.com/gambol99/kubernetes-platform). Please visit the following
+
+- [Kubernetes Platform](https://gambol99.github.io/kubernetes-platform/) - the platform documentation
+- [Kubernetes Platform Repository](https://github.com/gambol99/kubernetes-platform) - the platform repository
+- [Platform Tenant Repository](https://github.com/gambol99/platform-tenant/) - an example tenant repository, consuming the platform and this module.
 
 ## Usage
 
-Add example usage here
+The following example demonstrates how to use the module to provision the platform
 
 ```hcl
-module "example" {
-  source  = "appvia/<NAME>/aws"
-  version = "0.0.1"
+## Provision and bootstrap the platform using an tenant repository
+module "platform" {
+  count  = local.enable_platform ? 1 : 0
+  source = "github.com/gambol99/terraform-aws-eks//modules/platform?ref=v0.1.1"
 
-  # insert variables here
+  ## Name of the cluster
+  cluster_name = local.cluster_name
+  # The type of cluster
+  cluster_type = local.cluster_type
+  # Any repositories to be provisioned
+  repositories = var.argocd_repositories
+  ## The platform repository
+  platform_repository = local.platform_repository
+  # The location of the platform repository
+  platform_revision = local.platform_revision
+  # The location of the tenant repository
+  tenant_repository = local.tenant_repository
+  # You pretty much always want to use the HEAD
+  tenant_revision = local.tenant_revision
+  ## The tenant repository path
+  tenant_path = local.tenant_path
+
+  depends_on = [
+    module.eks
+  ]
 }
 ```
 
@@ -36,6 +57,7 @@ The `terraform-docs` utility is used to generate this README. Follow the below s
 3. Run `terraform-docs markdown table --output-file ${PWD}/README.md --output-mode inject .`
 
 <!-- BEGIN_TF_DOCS -->
+
 ## Providers
 
 No providers.
@@ -47,4 +69,5 @@ No inputs.
 ## Outputs
 
 No outputs.
+
 <!-- END_TF_DOCS -->
