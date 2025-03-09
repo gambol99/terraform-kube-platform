@@ -60,7 +60,7 @@ resource "kubectl_manifest" "bootstrap" {
     platform_repository    = var.platform_repository
     platform_revision      = var.platform_revision
     tenant_repository      = var.tenant_repository
-    tenant_repository_path = var.tenant_path
+    tenant_repository_path = local.tenant_path
     tenant_revision        = var.tenant_revision
   })
 
