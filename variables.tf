@@ -29,6 +29,15 @@ variable "argocd_values" {
   default     = []
 }
 
+variable "revision_overrides" {
+  description = "Revision overrides permit the user to override the revision contained in cluster definition"
+  type = object({
+    platform_revision = optional(string, null)
+    tenant_revision   = optional(string, null)
+  })
+  default = null
+}
+
 variable "repositories" {
   description = "A collection of repository secrets to add to the argocd namespace"
   type = map(object({

@@ -41,6 +41,16 @@ spec:
               path: /spec/generators/0/git/files/0/path
               value: ${tenant_repository_path}clusters/*.yaml
             %{~ endif }
+            %{ if platform_override ~}
+            - op: replace
+              path: /spec/generators/0/git/values/override_platform
+              value: ${platform_override}
+            %{~ endif }
+            %{ if tenant_override ~}
+            - op: replace
+              path: /spec/generators/0/git/values/override_tenant
+              value: ${tenant_override}
+            %{~ endif }
 
   destination:
     server: https://kubernetes.default.svc
