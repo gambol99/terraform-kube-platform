@@ -60,10 +60,10 @@ resource "kubectl_manifest" "bootstrap" {
   yaml_body = templatefile("${path.module}/assets/platform.yaml", {
     cluster_name           = try(var.cluster_name, "")
     cluster_type           = var.cluster_type
-    platform_override      = try(var.revision_overrides.platform_revision, null)
+    platform_override      = try(var.revision_overrides.platform_revision, "")
     platform_repository    = var.platform_repository
     platform_revision      = var.platform_revision
-    tenant_override        = try(var.revision_overrides.tenant_revision, null)
+    tenant_override        = try(var.revision_overrides.tenant_revision, "")
     tenant_repository      = var.tenant_repository
     tenant_repository_path = local.tenant_path
     tenant_revision        = var.tenant_revision
