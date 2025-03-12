@@ -17,7 +17,11 @@ spec:
   source:
     repoURL: ${platform_repository}
     path: kustomize/overlays/${cluster_type}
+    %{~ if platform_override != "" ~}
+    targetRevision: ${platform_override}
+    %{~ else ~}
     targetRevision: ${platform_revision}
+    %{~ endif ~}
     kustomize:
       commonLabels:
         app.kubernetes.io/managed-by: argocd
